@@ -9,22 +9,23 @@ root = pyrootutils.setup_root(
 
 import urllib.request
 
-# Download human-readable labels for CIFAR10
-# get the classnames
-#url, filename = (
-#    "https://raw.githubusercontent.com/RubixML/CIFAR-10/master/labels.txt",
-#    "labels.txt",
-#)
-#urllib.request.urlretrieve(url, filename)
-#with open("labels.txt") as f:
-#    categories = [s.strip() for s in f.readlines()]
-
 import requests
 
-url = 'https://raw.githubusercontent.com/RubixML/CIFAR-10/master/labels.txt'
+# Download human-readable labels for CIFAR10
+# get the classnames
+# url, filename = (
+#    "https://raw.githubusercontent.com/RubixML/CIFAR-10/master/labels.txt",
+#    "labels.txt",
+# )
+# urllib.request.urlretrieve(url, filename)
+# with open("labels.txt") as f:
+#    categories = [s.strip() for s in f.readlines()]
+
+
+url = "https://raw.githubusercontent.com/RubixML/CIFAR-10/master/labels.txt"
 the_page = requests.get(url)
-the_page=the_page.text.split("\n")
-categories=[]
+the_page = the_page.text.split("\n")
+categories = []
 for category in the_page:
     categories.append(category.strip())
 categories.pop()
