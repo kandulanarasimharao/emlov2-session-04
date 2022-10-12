@@ -1,13 +1,14 @@
 from typing import Any, List
 
 import torch
+import torch.nn.functional as F
+from PIL import Image
 from pytorch_lightning import LightningModule
-#from pytorch_lightning.loggers import TensorBoardLogger
+
+# from pytorch_lightning.loggers import TensorBoardLogger
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
-import torch.nn.functional as F
 from torchvision import transforms as T
-from PIL import Image
 
 
 class TIMMLitModule(LightningModule):
@@ -33,18 +34,18 @@ class TIMMLitModule(LightningModule):
         self.test_loss = MeanMetric()
         # for tracking best so far validation accuracy
         self.val_acc_best = MaxMetric()
-        self.predict_transform = T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+        self.predict_transform = T.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261))
 
     def forward(self, x: torch.Tensor):
         return self.net(x)
-    
+
     @torch.jit.export
     def forward_jit(self, x: torch.Tensor):
         with torch.no_grad():
             # transform the inputs
             x = self.predict_transform(x)
             # forward pass
-            logits= self(x)       
+            logits = self(x)
             preds = F.softmax(logits, dim=-1)
         return preds
 

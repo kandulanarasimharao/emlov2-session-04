@@ -1,12 +1,13 @@
 from typing import Any, List
 
 import torch
+import torch.nn.functional as F
 from pytorch_lightning import LightningModule
 from pytorch_lightning.loggers import TensorBoardLogger
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
-import torch.nn.functional as F
-from torchvision import transforms as T 
+from torchvision import transforms as T
+
 
 class MNISTLitModule(LightningModule):
     """Example of LightningModule for MNIST classification.
@@ -50,11 +51,10 @@ class MNISTLitModule(LightningModule):
         self.test_loss = MeanMetric()
 
         # for tracking best so far validation accuracy
-        #self.val_acc_best = MaxMetric()
+        # self.val_acc_best = MaxMetric()
         # for logging best so far validation accuracy
         self.val_acc_best = MaxMetric()
         self.predict_transform = T.Normalize((0.1307,), (0.3081,))
-
 
     def forward(self, x: torch.Tensor):
         return self.net(x)
@@ -69,7 +69,7 @@ class MNISTLitModule(LightningModule):
             logits = self(x)
             preds = F.softmax(logits, dim=-1)
         return preds
-    
+
     def on_train_start(self):
         # by default lightning executes validation step sanity checks before training starts,
         # so we need to make sure val_acc_best doesn't store accuracy from these checks

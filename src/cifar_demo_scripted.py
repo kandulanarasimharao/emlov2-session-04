@@ -8,6 +8,7 @@ root = pyrootutils.setup_root(
 )
 
 import urllib.request
+
 # Download human-readable labels for CIFAR10
 # get the classnames
 url, filename = (
@@ -15,25 +16,25 @@ url, filename = (
     "labels.txt",
 )
 urllib.request.urlretrieve(url, filename)
-with open("labels.txt", "r") as f:
+with open("labels.txt") as f:
     categories = [s.strip() for s in f.readlines()]
 
-    
-from typing import List, Tuple
 
-import torch
-import hydra
+from typing import Dict, List, Tuple
+
 import gradio as gr
+import hydra
+import torch
+import torchvision.transforms as transforms
 from omegaconf import DictConfig
-
-from src import utils
 from PIL import Image
 from timm.data import resolve_data_config
 from timm.data.transforms_factory import create_transform
-import torchvision.transforms as transforms
-from typing import Dict
+
+from src import utils
 
 log = utils.get_pylogger(__name__)
+
 
 def demo(cfg: DictConfig) -> Tuple[dict, dict]:
     """Demo function.
@@ -50,35 +51,33 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
 
     log.info(f"Instantiating scripted model <{cfg.ckpt_path}>")
     model = torch.jit.load(cfg.ckpt_path)
-    #print(model)
+    # print(model)
     log.info(f"Loaded Model: {model}")
 
-       
-    def predict(inp_img:Image):# -> Dict[str, float]:
+    def predict(inp_img: Image):  # -> Dict[str, float]:
         if inp_img is None:
             return None
-        #img_tensor = transforms.ToTensor()(inp_img)
+        # img_tensor = transforms.ToTensor()(inp_img)
         img_tensor = transforms.ToTensor()(inp_img).unsqueeze(0)
         with torch.no_grad():
-            out=model.forward_jit(img_tensor)
+            out = model.forward_jit(img_tensor)
             preds = out[0].tolist()
             confidences = {categories[i]: preds[i] for i in range(10)}
         return confidences
-        #return 1.2
-   
+        # return 1.2
 
     demo = gr.Interface(
         fn=predict,
-        inputs=gr.Image(shape=(32, 32),image_mode="RGB"),
+        inputs=gr.Image(shape=(32, 32), image_mode="RGB"),
         outputs=[gr.Label(num_top_classes=10)],
         live=True,
     ).launch(share=True)
 
-@hydra.main(
-    version_base="1.2", config_path=root / "configs", config_name="demo_scripted.yaml"
-)
+
+@hydra.main(version_base="1.2", config_path=root / "configs", config_name="demo_scripted.yaml")
 def main(cfg: DictConfig) -> None:
     demo(cfg)
+
 
 if __name__ == "__main__":
     main()

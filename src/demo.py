@@ -45,9 +45,10 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
 
     log.info(f"Loaded Model: {model}")
 
-    #transforms = T.Compose([T.ToTensor(), T.Normalize((0.1307,), (0.3081,))])
+    # transforms = T.Compose([T.ToTensor(), T.Normalize((0.1307,), (0.3081,))])
 
     transforms = T.Compose([T.ToTensor(), T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
     def recognize_digit(image):
         if image is None:
             return None
@@ -56,7 +57,7 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
         preds = F.softmax(logits, dim=1).squeeze(0).tolist()
         return {str(i): preds[i] for i in range(10)}
 
-    #im = gr.Image(shape=(32, 32), image_mode="L", invert_colors=True, source="canvas")
+    # im = gr.Image(shape=(32, 32), image_mode="L", invert_colors=True, source="canvas")
 
     demo = gr.Interface(
         fn=recognize_digit,
