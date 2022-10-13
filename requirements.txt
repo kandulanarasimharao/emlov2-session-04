@@ -28,4 +28,3 @@ pytest          # tests
 gradio==3.3.1
 dvc
 pre-commit==2.11.1
-dvc-gdrive
