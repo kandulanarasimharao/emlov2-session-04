@@ -1,4 +1,3 @@
---extra-index-url https://download.pytorch.org/whl/cpu
 # --------- pytorch --------- #
 torch==1.12.0
 torchvision==0.13.0
@@ -12,18 +11,18 @@ hydra-colorlog==1.2.0
 hydra-optuna-sweeper==1.2.0
 
 # --------- loggers --------- #
-wandb==0.13.4
-neptune-client==0.16.9
-mlflow==1.29.0
-comet-ml==3.31.15
+#wandb==0.13.4
+#neptune-client==0.16.9
+#mlflow==1.29.0
+#comet-ml==3.31.15
 
 # --------- others --------- #
-pyrootutils==1.0.4     # standardizing the project root setup
-pre-commit==2.20.0      # hooks for applying linters on commit
-rich==12.6.0            # beautiful text formatting in terminal
-pytest==7.1.3         # tests
+pyrootutils     # standardizing the project root setup
+pre-commit      # hooks for applying linters on commit
+rich            # beautiful text formatting in terminal
+pytest         # tests
 
-sh==1.14.3            # for running bash commands in some tests (linux/macos only)
+sh            # for running bash commands in some tests (linux/macos only)
 
 #demo
 gradio==3.5
