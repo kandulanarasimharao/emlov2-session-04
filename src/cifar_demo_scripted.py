@@ -8,33 +8,11 @@ root = pyrootutils.setup_root(
 )
 
 import urllib.request
-
-import requests
-
-# Download human-readable labels for CIFAR10
-# get the classnames
-# url, filename = (
-#    "https://raw.githubusercontent.com/RubixML/CIFAR-10/master/labels.txt",
-#    "labels.txt",
-# )
-# urllib.request.urlretrieve(url, filename)
-# with open("labels.txt") as f:
-#    categories = [s.strip() for s in f.readlines()]
-
-
-url = "https://raw.githubusercontent.com/RubixML/CIFAR-10/master/labels.txt"
-the_page = requests.get(url)
-the_page = the_page.text.split("\n")
-categories = []
-for category in the_page:
-    categories.append(category.strip())
-categories.pop()
-print(categories)
-
 from typing import Dict, List, Tuple
 
 import gradio as gr
 import hydra
+import requests
 import torch
 import torchvision.transforms as transforms
 from omegaconf import DictConfig
@@ -43,6 +21,14 @@ from timm.data import resolve_data_config
 from timm.data.transforms_factory import create_transform
 
 from src import utils
+
+url = "https://raw.githubusercontent.com/RubixML/CIFAR-10/master/labels.txt"
+the_page = requests.get(url)
+the_page = the_page.text.split("\n")
+categories = []
+for category in the_page:
+    categories.append(category.strip())
+categories.pop()
 
 log = utils.get_pylogger(__name__)
 
