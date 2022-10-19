@@ -9,6 +9,7 @@ from pytorch_lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
 from torchvision import transforms as T
+from pl_bolts.transforms.dataset_normalizations import cifar10_normalization
 
 
 class TIMMLitModule(LightningModule):
@@ -47,6 +48,7 @@ class TIMMLitModule(LightningModule):
             # forward pass
             logits = self(x)
             preds = F.softmax(logits, dim=-1)
+            #print(preds)
         return preds
 
     def on_train_start(self):

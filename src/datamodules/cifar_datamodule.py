@@ -28,7 +28,8 @@ class CIFAR10DataModule(LightningDataModule):
             [
                 transforms.Resize(224),
                 transforms.ToTensor(),
-                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                #transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)),
             ]
         )
         self.dims = (3, 32, 32)

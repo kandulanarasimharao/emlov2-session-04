@@ -54,18 +54,16 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
     def predict(inp_img: Image):  # -> Dict[str, float]:
         if inp_img is None:
             return None
-        # img_tensor = transforms.ToTensor()(inp_img)
         img_tensor = transforms.ToTensor()(inp_img).unsqueeze(0)
         with torch.no_grad():
             out = model.forward_jit(img_tensor)
             preds = out[0].tolist()
             confidences = {categories[i]: preds[i] for i in range(10)}
         return confidences
-        # return 1.2
 
     demo = gr.Interface(
         fn=predict,
-        inputs=gr.Image(shape=(32, 32), image_mode="RGB"),
+        inputs=gr.Image(shape=(32, 32)),
         outputs=[gr.Label(num_top_classes=10)],
         live=True,
     ).launch(share=True)
