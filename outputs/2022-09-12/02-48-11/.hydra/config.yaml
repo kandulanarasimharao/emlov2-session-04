@@ -5,5 +5,5 @@ train_val_test_split:
   - 55000
   - 5000
   - 10000
-num_workers: 0
+num_workers: 48
 pin_memory: false
