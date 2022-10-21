@@ -7,30 +7,31 @@ root = pyrootutils.setup_root(
     dotenv=True,
 )
 
-import urllib.request
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 import gradio as gr
 import hydra
-import requests
 import torch
 import torchvision.transforms as transforms
 from omegaconf import DictConfig
 from PIL import Image
-from timm.data import resolve_data_config
-from timm.data.transforms_factory import create_transform
 
 from src import utils
 
-url = "https://raw.githubusercontent.com/RubixML/CIFAR-10/master/labels.txt"
-the_page = requests.get(url)
-the_page = the_page.text.split("\n")
-categories = []
-for category in the_page:
-    categories.append(category.strip())
-categories.pop()
-
 log = utils.get_pylogger(__name__)
+
+cifar10_labels = [
+    "airplane",
+    "automobile",
+    "bird",
+    "cat",
+    "deer",
+    "dog",
+    "frog",
+    "horse",
+    "ship",
+    "truck",
+]
 
 
 def demo(cfg: DictConfig) -> Tuple[dict, dict]:
@@ -48,25 +49,27 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
 
     log.info(f"Instantiating scripted model <{cfg.ckpt_path}>")
     model = torch.jit.load(cfg.ckpt_path)
-    # print(model)
+
     log.info(f"Loaded Model: {model}")
 
-    def predict(inp_img: Image):  # -> Dict[str, float]:
-        if inp_img is None:
+    def recognize_image(image: Image):
+        if image is None:
             return None
-        img_tensor = transforms.ToTensor()(inp_img).unsqueeze(0)
-        with torch.no_grad():
-            out = model.forward_jit(img_tensor)
-            preds = out[0].tolist()
-            confidences = {categories[i]: preds[i] for i in range(10)}
-        return confidences
+        image = transforms.ToTensor()(image).unsqueeze(0)
+        preds = model.forward_jit(image)
+        preds = preds[0].tolist()
+        # print({cifar10_labels[i]: preds[i] for i in range(10)})
+        return {cifar10_labels[i]: preds[i] for i in range(10)}
+
+    im = gr.Image(shape=(32, 32), type="pil")
 
     demo = gr.Interface(
-        fn=predict,
-        inputs=gr.Image(shape=(32, 32)),
+        fn=recognize_image,
+        inputs=im,
         outputs=[gr.Label(num_top_classes=10)],
-        live=True,
-    ).launch(share=True)
+    )
+
+    demo.launch(share=True)
 
 
 @hydra.main(version_base="1.2", config_path=root / "configs", config_name="demo_scripted.yaml")
