@@ -4,7 +4,7 @@ I didn't include the scripted file in the git repo as it is more in size and whe
 https://drive.google.com/drive/folders/1QIMnENwy5u-OJHu4pjGF204fvkh3rDHH?usp=sharing
 
 To run the demo
-python3 src/cifar_scripted_demo.py ckpt_path=[path of the scripted file]
+python3 src/cifar_scripted_demo.py ckpt_path=\[path of the scripted file\]
 
 <div align="center">
 
