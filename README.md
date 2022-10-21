@@ -1,6 +1,6 @@
 Details to run the demo
 
-I didn't include the scripted file in the git repo as it is around 40 MB and when I include, it is failing in the pre-commit, so I made it available at
+I didn't include the scripted file in the git repo as it is more in size and when I include, it is failing in the pre-commit, so I made it available at
 https://drive.google.com/drive/folders/1QIMnENwy5u-OJHu4pjGF204fvkh3rDHH?usp=sharing
 
 To run the demo
