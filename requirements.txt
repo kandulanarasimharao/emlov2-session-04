@@ -1,6 +1,6 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
 # --------- pytorch --------- #
-torch==1.12.0
+torch==1.13.0+cpu
 torchvision==0.13.0
 pytorch-lightning==1.7.1
 torchmetrics==0.9.3
